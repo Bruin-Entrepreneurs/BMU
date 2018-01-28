@@ -23,5 +23,6 @@ class User(AbstractUser):
     name = models.CharField(max_length=50)
     display_name = models.CharField(max_length=100, default='')
     bio = models.CharField(max_length=500, blank=True, default='')
+    status = models.BooleanField()
 
     # events = models.ManyToManyField('event.events', on_delete=models.SET_NULL, related_name='events', null=True)
