@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import BaseUserManager, AbstractUser as _DjangoAbstractUser
+from django.contrib.auth.models import AbstractUser as _DjangoAbstractUser
 
 
 # DONT WORRY ABOUT THIS - THIS IS DJANGO MAGIC WE CAN HAVE A CUSTOM AUTH USER
@@ -19,10 +19,10 @@ class User(AbstractUser):
     """
     Model representing a User who can create and join events
     """
-    username = models.CharField(max_length=50, db_index=True, unique=True, null=True, blank=True)
-    name = models.CharField(max_length=50)
-    display_name = models.CharField(max_length=100, default='')
+    username = models.CharField(max_length=50, db_index=True, unique=True)
     bio = models.CharField(max_length=500, blank=True, default='')
-    status = models.BooleanField()
 
     # events = models.ManyToManyField('event.events', on_delete=models.SET_NULL, related_name='events', null=True)
+
+    def __str__(self):
+        return self.username + ': ' + self.bio
