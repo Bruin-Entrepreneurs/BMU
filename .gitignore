@@ -102,4 +102,6 @@ ENV/
 
 /.idea
 
+*.DS_Store
+
 /BMU/keys.py
