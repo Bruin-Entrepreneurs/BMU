@@ -19,7 +19,7 @@ class User(AbstractUser):
     """
     Model representing a User who can create and join events
     """
-    username = models.CharField(max_length=50, db_index=True, unique=True)
+    username = models.CharField(max_length=50, db_index=True, unique=True, default='')
     bio = models.CharField(max_length=500, blank=True, default='')
 
     # events = models.ManyToManyField('event.events', on_delete=models.SET_NULL, related_name='events', null=True)
