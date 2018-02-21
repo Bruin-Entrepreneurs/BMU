@@ -1,22 +1,43 @@
 """
 Django settings for BMU project.
 """
+
+# Normally you should not import ANYTHING from Django directly
+# into your settings, but ImproperlyConfigured is an exception.
+from django.core.exceptions import ImproperlyConfigured
+
 # Attempt to load environment variables
 try:
-    from ..keys import *
+    from .keys import *
 except ImportError:
     pass
 
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.abspath(__file__ + '/../../../')
 
-# SECURITY WARNING: don't run with debug turned on in production!
+
+def get_env_setting(setting, default=None):
+    """
+    Get the environment setting or return default value if set, otherwise return exception
+    """
+    value = os.environ.get(setting, default)
+    if default is None and value is None:
+        raise ImproperlyConfigured
+    else:
+        return value
+
+
+SECRET_KEY = '($t9@_*+dd-ez&*ij$@-90bqi56dz($&udz(sbqc4d=*ygq0jx'
+#
+# # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# AUTH_USER_MODEL = 'user.user'
 
 # Application definition
 
@@ -27,6 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_extensions',
+    'apps.user',
 ]
 
 MIDDLEWARE = [
