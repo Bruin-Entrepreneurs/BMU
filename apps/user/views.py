@@ -7,7 +7,7 @@ from apps.user.models import User
 from apps.user.serializer import UserSerializer
 
 
-class UserList(ListCreateAPIView, UpdateAPIView):
+class UserList(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
