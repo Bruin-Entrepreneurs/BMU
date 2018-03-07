@@ -1,19 +1,17 @@
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, UpdateAPIView
-from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status, exceptions
 
 from apps.user.models import User
-from apps.user.serializer import UserSerializer
+from apps.user.serializer import UserSerializer, UserSummarySerializer
 
 
-class UserList(ListCreateAPIView, UpdateAPIView):
+class UserListCreateView(ListCreateAPIView):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserSummarySerializer
     permission_classes = (IsAuthenticated,)
 
 
-class UserDetail(RetrieveUpdateDestroyAPIView):
+class UserDetailView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
