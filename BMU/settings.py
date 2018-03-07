@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'apps.user',
+    'apps.event',
+    'apps.helpers',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +131,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = '/static/'
+
+
+# BMU CONSTANTS
+HTTP_GET = 'GET'
