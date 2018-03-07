@@ -26,7 +26,7 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
     def post(self, request, *args, **kwargs):
         event_type_id = get_data_field_or_400(request, 'type_id')
         start_time = get_data_field_or_400(request, 'start_time')
-        end_time = get_data_field_or_400(request, 'start_time')
+        end_time = get_data_field_or_400(request, 'end_time')
         super_invited = get_data_list_or_400(request, 'super_invites')
         description = get_data_field_or_400(request, 'description')
 
