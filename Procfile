@@ -1,1 +1,1 @@
-web: gunicorn BMU.wsgi
+web: gunicorn --bind 0.0.0.0:5000 BMU.wsgi:application
