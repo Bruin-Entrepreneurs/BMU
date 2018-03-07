@@ -18,7 +18,10 @@ import os
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.abspath(__file__ + '/../../../')
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+# STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+STATIC_ROOT = 'static'
+STATIC_URL = '/static/'
+
 
 def get_env_setting(setting, default=None):
     """
@@ -31,16 +34,14 @@ def get_env_setting(setting, default=None):
         return value
 
 
-SECRET_KEY = '($t9@_*+dd-ez&*ij$@-90bqi56dz($&udz(sbqc4d=*ygq0jx'
+SECRET_KEY = get_env_setting('SECRET_KEY')
 #
 # # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = get_env_setting('ALLOWED_HOSTS')
 
 # AUTH_USER_MODEL = 'user.user'
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -127,12 +128,3 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-
-STATIC_URL = '/static/'
-
-
-# BMU CONSTANTS
-HTTP_GET = 'GET'
