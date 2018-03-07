@@ -10,8 +10,8 @@ class EventType(models.Model):
 class Event(models.Model):
     creator = models.ForeignKey('user.User', related_name="creator", null=False)
     event_type = models.ForeignKey('event.EventType', related_name="activity_type", null=False)
-    accepted = models.ManyToManyField('user.User', related_name="accepted", null=True)
-    super_invited = models.ManyToManyField('user.User', related_name="super_invited", null=True)
+    accepted = models.ManyToManyField('user.User', related_name="accepted")
+    super_invited = models.ManyToManyField('user.User', related_name="super_invited")
     description = models.CharField(max_length=255, null=True)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(default=timezone.now() + timezone.timedelta(hours=1))

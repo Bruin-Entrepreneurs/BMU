@@ -41,7 +41,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = get_env_setting('ALLOWED_HOSTS')
 
-# AUTH_USER_MODEL = 'user.user'
+AUTH_USER_MODEL = 'user.User'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
