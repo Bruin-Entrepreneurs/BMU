@@ -1,7 +1,8 @@
 from django.conf.urls import url
-from apps.user import views
+from apps.user.views import UserListCreateView, UserDetailView, FacebookLogin
 
 urlpatterns = [
-    url(r'^$', views.UserListCreateView.as_view(), name='user_list'),
-    url(r'^me^$', views.UserDetailView.as_view(), name='user_detail'),
+    url(r'^$', UserListCreateView.as_view(), name='user_list'),
+    url(r'^me/?$', UserDetailView.as_view(), name='user_detail'),
+    url(r'^fb_login/?$', FacebookLogin.as_view(), name='fb_login'),
 ]

@@ -21,6 +21,8 @@ class User(AbstractUser):
     """
     username = models.CharField(max_length=50, db_index=True, unique=True, default='')
     bio = models.CharField(max_length=500, blank=True, default='')
+    profile_pic_url = models.CharField(max_length=100, blank=True, default='')
+    facebook_id = models.CharField(max_length=50, blank=True, unique=True, default='')
 
     def __str__(self):
         return self.username

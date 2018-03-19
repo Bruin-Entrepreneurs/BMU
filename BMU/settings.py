@@ -35,8 +35,8 @@ def get_env_setting(setting, default=None):
 
 
 SECRET_KEY = get_env_setting('SECRET_KEY')
-#
-# # SECURITY WARNING: don't run with debug turned on in production!
+
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = get_env_setting('ALLOWED_HOSTS')
@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'oauth2_provider',
+    'corsheaders',
     'apps.user',
     'apps.event',
     'apps.helpers',
@@ -64,7 +66,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'BMU.urls'
 
@@ -116,15 +121,23 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+OAUTH2_PROVIDER = {
+    'SCOPES': {
+        'read': 'Read scope',
+        'write': 'Write scope',
+        'groups': 'Access to your groups',
+    },
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 21600,
+}
 
 # Internationalization
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
+
+# FB SETTINGS
+FACEBOOK_GRAPH_VERSION = 'v2.12'
+FB_APP_ID = get_env_setting('FB_APP_ID')
+FB_APP_SECRET = get_env_setting('FB_APP_SECRET')

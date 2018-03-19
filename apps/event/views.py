@@ -18,7 +18,7 @@ class EventTypeListView(ListCreateAPIView):
 class EventListCreateView(ListModelMixin, GenericAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -27,10 +27,10 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         event_type_id = get_data_field_or_400(request, 'type_id')
         start_time = get_data_field_or_400(request, 'start_time')
         end_time = get_data_field_or_400(request, 'end_time')
-        super_invited = get_data_list_or_400(request, 'super_invites')
+        super_invite_ids = get_data_list_or_400(request, 'super_invite_ids')
         description = get_data_field_or_400(request, 'description')
 
-        event = Event(
+        event = Event.objects.create(
             creator=request.user,
             event_type=EventType.objects.get(event_type_id),
             start_time=start_time,
@@ -38,9 +38,13 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
             description=description
         )
 
-        for super_invite_id in super_invited:
+        for super_invite_id in super_invite_ids:
             event.super_invited.add(User.objects.get(super_invite_id))
         event.accepted.add(request.user)
         event.save()
 
-        return Response(data={}, status=status.HTTP_201_CREATED)
+        data = {
+            'message': 'Successfully created event'
+        }
+
+        return Response(data=data, status=status.HTTP_201_CREATED)
