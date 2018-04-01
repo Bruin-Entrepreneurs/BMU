@@ -1,13 +1,12 @@
 from rest_framework.generics import GenericAPIView, ListCreateAPIView
 from rest_framework.mixins import ListModelMixin
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 
 from apps.helpers.helpers import get_data_field_or_400, get_data_list_or_400
 from apps.event.serializer import EventSerializer, EventTypeSerializer
 from apps.event.models import Event, EventType
-from apps.user.models import User
+from apps.helpers.permissions import IsUser
 
 
 class EventTypeListView(ListCreateAPIView):
@@ -18,7 +17,7 @@ class EventTypeListView(ListCreateAPIView):
 class EventListCreateView(ListModelMixin, GenericAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    # permission_classes = (IsAuthenticated,)
+    permission_classes = [IsUser]
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -29,22 +28,19 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         end_time = get_data_field_or_400(request, 'end_time')
         super_invite_ids = get_data_list_or_400(request, 'super_invite_ids')
         description = get_data_field_or_400(request, 'description')
+        print(request.user)
 
         event = Event.objects.create(
             creator=request.user,
-            event_type=EventType.objects.get(event_type_id),
-            start_time=start_time,
-            end_time=end_time,
+            event_type=EventType.objects.get(pk=event_type_id),
+            # start_time=start_time,
+            # end_time=end_time,
             description=description
         )
 
-        for super_invite_id in super_invite_ids:
-            event.super_invited.add(User.objects.get(super_invite_id))
-        event.accepted.add(request.user)
+        # for super_invite_id in super_invite_ids:
+        #     event.super_invited.add(User.objects.get(pk=super_invite_id))
+        # event.accepted.add(request.user)
         event.save()
 
-        data = {
-            'message': 'Successfully created event'
-        }
-
-        return Response(data=data, status=status.HTTP_201_CREATED)
+        return Response(data=EventSerializer(event).data, status=status.HTTP_201_CREATED)

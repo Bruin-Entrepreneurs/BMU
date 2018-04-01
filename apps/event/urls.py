@@ -5,4 +5,3 @@ urlpatterns = [
     url(r'^$', EventListCreateView.as_view(), name='events'),
     url(r'^types/?$', EventTypeListView.as_view(), name='event_typess'),
 ]
-

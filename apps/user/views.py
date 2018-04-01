@@ -13,6 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps.helpers.helpers import get_data_field_or_400
+from apps.helpers.permissions import IsUser
 from apps.user.models import User
 from apps.user.serializer import UserSerializer, UserSummarySerializer
 
@@ -22,13 +23,13 @@ logger = logging.getLogger(__name__)
 class UserListCreateView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSummarySerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsUser]
 
 
 class UserDetailView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsUser]
 
 
 # facebook login

@@ -11,7 +11,7 @@ class EventType(models.Model):
 
 
 class Event(models.Model):
-    creator = models.OneToOneField('user.User', related_name="creator", null=False)
+    creator = models.ForeignKey('user.User', related_name="creator", null=False)
     event_type = models.ForeignKey('event.EventType', related_name="event_type", null=False)
     accepted = models.ManyToManyField('user.User', related_name="accepted")
     declined = models.ManyToManyField('user.User', related_name="declined")
@@ -21,4 +21,4 @@ class Event(models.Model):
     end_time = models.DateTimeField(default=timezone.now() + timezone.timedelta(hours=1))
 
     def __str__(self):
-        return "%s at %s".format(self.event_type, self.start_time)
+        return "{} at {}".format(self.event_type.name, self.start_time)
