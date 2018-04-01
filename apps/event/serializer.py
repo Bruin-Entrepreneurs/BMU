@@ -7,7 +7,7 @@ class EventTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = EventType
         fields = (
-            'name'
+            'name',
         )
 
 
