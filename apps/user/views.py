@@ -25,6 +25,15 @@ class UserListCreateView(ListCreateAPIView):
     serializer_class = UserSummarySerializer
     permission_classes = [IsUser]
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+
+        # Filter auth user
+        result = [user for user in serializer.data if user['username'] != 'bmu_user']
+
+        return Response(result)
+
 
 class UserDetailView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
