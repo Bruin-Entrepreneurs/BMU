@@ -27,6 +27,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 #     os.path.join(BASE_DIR, 'static'),
 # )
 
+
 def get_env_setting(setting, default=None):
     """
     Get the environment setting or return default value if set, otherwise return exception

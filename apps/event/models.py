@@ -3,7 +3,7 @@ from django.utils import timezone
 
 
 class EventType(models.Model):
-    name = models.CharField(max_length=150, null=True)
+    name = models.CharField(max_length=150, null=False, unique=True, db_index=True)
     # image = models.ImageField()
 
     def __str__(self):

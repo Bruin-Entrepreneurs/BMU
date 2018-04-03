@@ -1,4 +1,4 @@
-from rest_framework.generics import GenericAPIView, ListCreateAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,7 +9,7 @@ from apps.event.models import Event, EventType
 from apps.helpers.permissions import IsUser
 
 
-class EventTypeListView(ListCreateAPIView):
+class EventTypeListView(ListAPIView):
     queryset = EventType.objects.all()
     serializer_class = EventTypeSerializer
 
@@ -28,7 +28,6 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         end_time = get_data_field_or_400(request, 'end_time')
         super_invite_ids = get_data_list_or_400(request, 'super_invite_ids')
         description = get_data_field_or_400(request, 'description')
-        print(request.user)
 
         event = Event.objects.create(
             creator=request.user,
