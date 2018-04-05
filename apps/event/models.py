@@ -4,7 +4,7 @@ from django.utils import timezone
 
 class EventType(models.Model):
     name = models.CharField(max_length=150, null=False, unique=True, db_index=True)
-    # image = models.ImageField()
+    image_url = models.CharField(max_length=255, default='')
 
     def __str__(self):
         return self.name

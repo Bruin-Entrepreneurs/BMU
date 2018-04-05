@@ -9,6 +9,7 @@ class EventTypeSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
+            'image_url'
         )
 
 
@@ -25,12 +26,14 @@ class EventSerializer(serializers.ModelSerializer):
             'end_time',
         )
 
+    event_type = EventTypeSerializer()
+
 
 class EventSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = (
-            'activity_type',
+            'event_type',
             'accepted',
             'super_invited',
             'start_time',
