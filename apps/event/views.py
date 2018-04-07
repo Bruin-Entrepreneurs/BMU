@@ -7,6 +7,7 @@ from apps.helpers.helpers import get_data_field_or_400, get_data_list_or_400
 from apps.event.serializer import EventSerializer, EventTypeSerializer
 from apps.event.models import Event, EventType
 from apps.helpers.permissions import IsUser
+from apps.user.models import User
 
 
 class EventTypeListView(ListAPIView):
@@ -23,7 +24,7 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        event_type_id = get_data_field_or_400(request, 'type_id')
+        event_type_id = get_data_field_or_400(request, 'event_type_id')
         start_time = get_data_field_or_400(request, 'start_time')
         end_time = get_data_field_or_400(request, 'end_time')
         super_invite_ids = get_data_list_or_400(request, 'super_invite_ids')
@@ -37,9 +38,9 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
             description=description
         )
 
-        # for super_invite_id in super_invite_ids:
-        #     event.super_invited.add(User.objects.get(pk=super_invite_id))
-        # event.accepted.add(request.user)
+        for super_invite_id in super_invite_ids:
+            event.super_invited.add(User.objects.get(pk=super_invite_id))
+        event.accepted.add(request.user)
         event.save()
 
         return Response(data=EventSerializer(event).data, status=status.HTTP_201_CREATED)

@@ -12,7 +12,7 @@ def get_query_param_or_400(request: Request, key: str, _list=False):
         value = request.query_params.getlist(key)
     else:
         value = request.query_params.get(key)
-    if value is None or value == []:
+    if value is None:
         raise ParseError("'%s' is a required query parameter." % key)
 
     return value
@@ -34,7 +34,7 @@ def get_data_field_or_400(request: Request, key: str, _list=False):
         value = request.data.getlist(key)
     else:
         value = request.data.get(key)
-    if value is None or value == []:
+    if value is None:
         raise ParseError("'%s' is a required body field." % key)
     return value
 
