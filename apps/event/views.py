@@ -32,14 +32,15 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
 
         event = Event.objects.create(
             creator=request.user,
-            event_type=EventType.objects.get(pk=event_type_id),
+            event_type=EventType.objects.get(pk=int(event_type_id)),
             # start_time=start_time,
             # end_time=end_time,
             description=description
         )
 
         for super_invite_id in super_invite_ids:
-            event.super_invited.add(User.objects.get(pk=super_invite_id))
+            super_invited_user = User.objects.get(pk=int(super_invite_id))
+            event.super_invited.add(super_invited_user)
         event.accepted.add(request.user)
         event.save()
 
