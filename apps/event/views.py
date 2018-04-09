@@ -50,4 +50,7 @@ class EventDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = EventSerializer
 
     def get(self, request, *args, **kwargs):
-        return self.get_queryset().get(pk=self.kwargs['event_id'])
+        instance = self.get_queryset().get(pk=self.kwargs['event_id'])
+        serializer = self.get_serializer(instance)
+
+        return Response(serializer.data)
