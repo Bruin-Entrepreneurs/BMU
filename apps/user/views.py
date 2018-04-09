@@ -23,22 +23,14 @@ logger = logging.getLogger(__name__)
 class UserListCreateView(ListCreateAPIView):
     queryset = User.objects.all().exclude(username='bmu_user')
     serializer_class = UserSummarySerializer
-    # permission_classes = [IsUser]
-
-    # def list(self, request, *args, **kwargs):
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     serializer = self.get_serializer(queryset, many=True)
-    #
-    #     # Filter auth user
-    #     result = [user for user in serializer.data if user['username'] != 'bmu_user']
-    #
-    #     return Response(result)
 
 
 class UserDetailView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    # permission_classes = [IsUser]
+
+    def get(self, request, *args, **kwargs):
+        return self.get_queryset().get(pk=self.kwargs['user_id'])
 
 
 # facebook login

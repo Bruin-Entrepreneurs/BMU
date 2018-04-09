@@ -9,11 +9,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'username',
-            'email',
             'first_name',
             'last_name',
             'profile_pic_url',
             'bio',
+            'email',
         )
 
 
@@ -25,4 +25,5 @@ class UserSummarySerializer(serializers.ModelSerializer):
             'username',
             'first_name',
             'last_name',
+            'profile_pic_url',
         )

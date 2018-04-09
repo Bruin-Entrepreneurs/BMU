@@ -1,12 +1,11 @@
-from rest_framework.generics import GenericAPIView, ListAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
 from rest_framework import status
 
 from apps.helpers.helpers import get_data_field_or_400, get_data_list_or_400
-from apps.event.serializer import EventSerializer, EventTypeSerializer
+from apps.event.serializer import EventSerializer, EventTypeSerializer, EventSummarySerializer
 from apps.event.models import Event, EventType
-from apps.helpers.permissions import IsUser
 from apps.user.models import User
 
 
@@ -17,8 +16,7 @@ class EventTypeListView(ListAPIView):
 
 class EventListCreateView(ListModelMixin, GenericAPIView):
     queryset = Event.objects.all()
-    serializer_class = EventSerializer
-    permission_classes = [IsUser]
+    serializer_class = EventSummarySerializer
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -45,3 +43,11 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         event.save()
 
         return Response(data=EventSerializer(event).data, status=status.HTTP_201_CREATED)
+
+
+class EventDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.get_queryset().get(pk=self.kwargs['event_id'])
