@@ -52,10 +52,10 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         for user in users:
             if user.id in super_invite_ids:
                 body = 'You\'ve been SUPER invited by ' + creator.username + '!! YOU BETTER GO HOE'
-                sound = True
+                sound = 'default'
             else:
                 body = 'You\'ve been invited by ' + creator.username + '!'
-                sound = False
+                sound = None
 
             requests.post(
                 'https://exp.host/--/api/v2/push/send',
@@ -64,7 +64,7 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
                     "title": event_type.name + 'at' + str(start_time),
                     "body": body,
                     "data": json.dumps({'id': event.id}),
-                    "sound": sound
+                    # "sound": sound
                 }
             )
 
