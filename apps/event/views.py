@@ -1,3 +1,5 @@
+import json
+
 import requests
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import ListModelMixin
@@ -54,7 +56,7 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
                     "to": user.notification_token,
                     "title": event_type.name + str(start_time),
                     "body": 'You\'ve been invited by ' + creator.username + '!',
-                    "data": {'id': event.id}
+                    "data": json.dumps({'id': event.id})
                 }
             )
 
