@@ -41,3 +41,5 @@ class EventSummarySerializer(serializers.ModelSerializer):
             'super_invited',
             'start_time',
         )
+
+    event_type = EventTypeSerializer()
