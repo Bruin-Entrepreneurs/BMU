@@ -1,8 +1,8 @@
 import logging
 from collections import defaultdict
 from typing import Dict
-
 import requests
+
 from django.conf import settings
 from django.utils import timezone
 from oauth2_provider.models import Application, AccessToken, RefreshToken

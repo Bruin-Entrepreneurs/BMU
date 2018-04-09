@@ -22,6 +22,7 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        user = request.user
         event_type_id = get_data_field_or_400(request, 'event_type_id')
         start_time = get_data_field_or_400(request, 'start_time')
         end_time = get_data_field_or_400(request, 'end_time')
@@ -39,7 +40,7 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         for super_invite_id in super_invite_ids:
             super_invited_user = User.objects.get(pk=int(super_invite_id))
             event.super_invited.add(super_invited_user)
-        event.accepted.add(request.user)
+        event.accepted.add(user)
         event.save()
 
         return Response(data=EventSerializer(event).data, status=status.HTTP_201_CREATED)
@@ -50,7 +51,52 @@ class EventDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = EventSerializer
 
     def get(self, request, *args, **kwargs):
-        instance = self.get_queryset().get(pk=self.kwargs['event_id'])
-        serializer = self.get_serializer(instance)
+        event_instance = self.get_queryset().get(pk=self.kwargs['event_id'])
+        serializer = self.get_serializer(event_instance)
+
+        return Response(serializer.data)
+
+
+class EventAcceptView(RetrieveUpdateDestroyAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        event_instance = self.get_queryset().get(pk=self.kwargs['event_id'])
+
+        event_instance.accept.add(user)
+        event_instance.save()
+        serializer = self.get_serializer(event_instance)
+
+        return Response(serializer.data)
+
+
+class EventAcceptView(RetrieveUpdateDestroyAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        event_instance = self.get_queryset().get(pk=self.kwargs['event_id'])
+
+        event_instance.accepted.add(user)
+        event_instance.save()
+        serializer = self.get_serializer(event_instance)
+
+        return Response(serializer.data)
+
+
+class EventDeclineView(RetrieveUpdateDestroyAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        event_instance = self.get_queryset().get(pk=self.kwargs['event_id'])
+
+        event_instance.declined.add(user)
+        event_instance.save()
+        serializer = self.get_serializer(event_instance)
 
         return Response(serializer.data)
