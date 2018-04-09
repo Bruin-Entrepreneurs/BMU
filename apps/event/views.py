@@ -53,9 +53,8 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
                 data={
                     "to": user.notification_token,
                     "title": event_type.name,
-                    "body": 'You\'ve been invited by ' + creator + '!'
-                },
-                headers={'Accept': 'application/json', 'Content-Type': 'application/json'}
+                    "body": 'You\'ve been invited by ' + '!'
+                }
             )
 
         return Response(data=EventSerializer(event).data, status=status.HTTP_201_CREATED)
