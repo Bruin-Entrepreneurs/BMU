@@ -12,8 +12,10 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'profile_pic_url',
-            'bio',
             'email',
+            'bio',
+            'facebook_id',
+            'notification_token'
         )
 
 

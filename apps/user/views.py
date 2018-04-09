@@ -1,19 +1,17 @@
 import logging
 from collections import defaultdict
 from typing import Dict
-import requests
 
+import requests
 from django.conf import settings
 from django.utils import timezone
 from oauth2_provider.models import Application, AccessToken, RefreshToken
 from oauthlib import common
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, GenericAPIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps.helpers.helpers import get_data_field_or_400
-from apps.helpers.permissions import IsUser
 from apps.user.models import User
 from apps.user.serializer import UserSerializer, UserSummarySerializer
 
@@ -43,6 +41,7 @@ class FacebookLogin(GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         fb_token = get_data_field_or_400(request, 'fb_token')
+        notification_token = get_data_field_or_400(request, 'notification_token')
         app_access_token = settings.FB_APP_ID + '|' + settings.FB_APP_SECRET
         params = {
             'input_token': fb_token,
@@ -80,8 +79,8 @@ class FacebookLogin(GenericAPIView):
                 }
 
                 r = requests.get(
-                    'https://graph.facebook.com/{version}/me?fields=id,first_name,last_name,email'
-                        .format(version=settings.FACEBOOK_GRAPH_VERSION),
+                    'https://graph.facebook.com/{version}/me?fields=id,first_name,last_name,email'.format(
+                        version=settings.FACEBOOK_GRAPH_VERSION),
                     params=params,
                 )
 
@@ -111,7 +110,8 @@ class FacebookLogin(GenericAPIView):
                         last_name=_last_name,
                         email=_email,
                         profile_pic_url=_profile_pic_url,
-                        facebook_id=_id
+                        facebook_id=_id,
+                        notification_token=notification_token
                     )
                     user.set_unusable_password()
                     user.save()
