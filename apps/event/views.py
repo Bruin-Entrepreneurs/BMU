@@ -1,13 +1,8 @@
+import requests
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
 from rest_framework import status
-
-from exponent_server_sdk import DeviceNotRegisteredError
-from exponent_server_sdk import PushClient
-from exponent_server_sdk import PushMessage
-from exponent_server_sdk import PushResponseError
-from exponent_server_sdk import PushServerError
 
 from apps.helpers.helpers import get_data_field_or_400, get_data_list_or_400
 from apps.event.serializer import EventSerializer, EventTypeSerializer, EventSummarySerializer
@@ -52,17 +47,16 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         event.accepted.add(creator)
         event.save()
 
-        # Invite all users with a push notification
-        push_client = PushClient()
         for user in users:
-            try:
-                response = push_client.publish(
-                    PushMessage(to=user.notification_token,
-                                title=event_type.name,
-                                body='You\'ve been invited by ' + creator + '!',
-                                data=''))
-            except:
-                pass
+            requests.post(
+                'https://exp.host/--/api/v2/push/send',
+                data={
+                    "to": user.notification_token,
+                    "title": event_type.name,
+                    "body": 'You\'ve been invited by ' + creator + '!'
+                },
+                headers={'Accept': 'application/json', 'Content-Type': 'application/json'}
+            )
 
         return Response(data=EventSerializer(event).data, status=status.HTTP_201_CREATED)
 
