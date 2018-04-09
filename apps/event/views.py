@@ -53,7 +53,8 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
                 data={
                     "to": user.notification_token,
                     "title": event_type.name + str(start_time),
-                    "body": 'You\'ve been invited by ' + creator.username + '!'
+                    "body": 'You\'ve been invited by ' + creator.username + '!',
+                    "data": {'id': event.id}
                 }
             )
 
