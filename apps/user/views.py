@@ -64,6 +64,8 @@ class FacebookLogin(GenericAPIView):
             # Query db and try to find user
             try:
                 user = User.objects.get(facebook_id=fb_user_id)
+                user.notification_token = notification_token
+                user.save()
 
                 user_data = self.get_serializer(user).data
                 token_data = create_token(user)
