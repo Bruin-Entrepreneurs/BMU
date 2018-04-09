@@ -23,6 +23,7 @@ class User(AbstractUser):
     bio = models.CharField(max_length=500, blank=True, default='')
     profile_pic_url = models.CharField(max_length=100, blank=True, default='')
     facebook_id = models.CharField(max_length=50, blank=True, unique=True, default='')
+    notification_token = models.CharField(max_length=50, blank=True, default='')
 
     def __str__(self):
         return self.username
