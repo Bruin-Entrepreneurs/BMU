@@ -11,11 +11,11 @@ class EventType(models.Model):
 
 
 class Event(models.Model):
-    creator = models.ForeignKey('user.User', related_name="creator", null=False)
-    event_type = models.ForeignKey('event.EventType', related_name="event_type", null=False)
-    accepted = models.ManyToManyField('user.User', related_name="accepted")
-    declined = models.ManyToManyField('user.User', related_name="declined")
-    super_invited = models.ManyToManyField('user.User', related_name="super_invited")
+    creator = models.ForeignKey('user.User', on_delete=models.SET_NULL, related_name="creator", null=False)
+    event_type = models.ForeignKey('event.EventType', on_delete=models.SET_NULL, related_name="event_type", null=False)
+    accepted = models.ManyToManyField('user.User', on_delete=models.SET_NULL, related_name="accepted")
+    declined = models.ManyToManyField('user.User', on_delete=models.SET_NULL, related_name="declined")
+    super_invited = models.ManyToManyField('user.User', on_delete=models.SET_NULL, related_name="super_invited")
     description = models.CharField(max_length=255, blank=True, default='')
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(default=timezone.now() + timezone.timedelta(hours=1))

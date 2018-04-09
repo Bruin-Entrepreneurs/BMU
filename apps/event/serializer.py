@@ -21,6 +21,7 @@ class EventSerializer(serializers.ModelSerializer):
             'creator',
             'event_type',
             'accepted',
+            'declined'
             'super_invited',
             'description',
             'start_time',
