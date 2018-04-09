@@ -17,6 +17,7 @@ class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = (
+            'id',
             'creator',
             'event_type',
             'accepted',
@@ -33,6 +34,7 @@ class EventSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = (
+            'id',
             'event_type',
             'accepted',
             'super_invited',
