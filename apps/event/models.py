@@ -11,8 +11,8 @@ class EventType(models.Model):
 
 
 class Event(models.Model):
-    creator = models.ForeignKey('user.User', on_delete=models.SET_NULL, related_name="creator", null=False)
-    event_type = models.ForeignKey('event.EventType', on_delete=models.SET_NULL, related_name="event_type", null=False)
+    creator = models.ForeignKey('user.User', on_delete=models.SET_NULL, related_name="creator", null=True)
+    event_type = models.ForeignKey('event.EventType', on_delete=models.SET_NULL, related_name="event_type", null=True)
     accepted = models.ManyToManyField('user.User', related_name="accepted")
     declined = models.ManyToManyField('user.User', related_name="declined")
     super_invited = models.ManyToManyField('user.User', related_name="super_invited")
