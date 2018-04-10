@@ -22,6 +22,9 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
     queryset = Event.objects.filter(end_time__gte=timezone.now())  # Gets all future events
     serializer_class = EventSummarySerializer
 
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         creator = request.user
         users = User.objects.all()
@@ -36,7 +39,7 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         event = Event.objects.create(
             creator=creator,
             event_type=event_type,
-            # start_time=start_time,
+            start_time=start_time,
             # end_time=end_time,
             description=description
         )
