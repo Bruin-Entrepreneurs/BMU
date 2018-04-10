@@ -28,8 +28,8 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
 
     def get(self, request, *args, **kwargs):
-        instance = self.get_queryset().get(pk=self.kwargs['user_id'])
-        serializer = self.get_serializer(instance)
+        user_instance = self.get_queryset().get(pk=self.kwargs['user_id'])
+        serializer = self.get_serializer(user_instance)
 
         return Response(serializer.data)
 

@@ -1,10 +1,11 @@
 import json
-
 import requests
+
 from rest_framework.generics import GenericAPIView, ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
 from rest_framework import status
+from django.utils import timezone
 
 from apps.helpers.helpers import get_data_field_or_400, get_data_list_or_400
 from apps.event.serializer import EventSerializer, EventTypeSerializer, EventSummarySerializer
@@ -18,11 +19,8 @@ class EventTypeListView(ListAPIView):
 
 
 class EventListCreateView(ListModelMixin, GenericAPIView):
-    queryset = Event.objects.all()
+    queryset = Event.objects.filter(end_time__gte=timezone.now())  # Gets all future events
     serializer_class = EventSummarySerializer
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         creator = request.user
@@ -91,21 +89,6 @@ class EventAcceptView(RetrieveUpdateDestroyAPIView):
         event_instance = self.get_queryset().get(pk=self.kwargs['event_id'])
 
         event_instance.accept.add(user)
-        event_instance.save()
-        serializer = self.get_serializer(event_instance)
-
-        return Response(serializer.data)
-
-
-class EventAcceptView(RetrieveUpdateDestroyAPIView):
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-
-    def post(self, request, *args, **kwargs):
-        user = request.user
-        event_instance = self.get_queryset().get(pk=self.kwargs['event_id'])
-
-        event_instance.accepted.add(user)
         event_instance.save()
         serializer = self.get_serializer(event_instance)
 
