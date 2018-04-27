@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from apps.event.models import Event, EventType
+from apps.user.serializer import UserSummarySerializer
 
 
 class EventTypeSerializer(serializers.ModelSerializer):
@@ -29,6 +30,15 @@ class EventSerializer(serializers.ModelSerializer):
         )
 
     event_type = EventTypeSerializer()
+    super_invited = serializers.SerializerMethodField()
+
+    def get_super_invited(self, obj):
+        data = []
+
+        for user in obj.super_invited.all():
+            data.append(UserSummarySerializer(user).data)
+
+        return data
 
 
 class EventSummarySerializer(serializers.ModelSerializer):

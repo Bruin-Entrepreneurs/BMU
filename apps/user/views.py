@@ -2,14 +2,22 @@ import logging
 from collections import defaultdict
 from typing import Dict
 import requests
+import json
+from braces.views import CsrfExemptMixin
 
 from django.conf import settings
 from django.utils import timezone
+from django.db.models.query_utils import Q
 from oauth2_provider.models import Application, AccessToken, RefreshToken
+from oauth2_provider.settings import oauth2_settings
+from oauth2_provider.views.mixins import OAuthLibMixin
 from oauthlib import common
+from oauthlib.oauth2 import Server
 from rest_framework import status
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView, GenericAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from apps.helpers.helpers import get_data_field_or_400
 from apps.user.models import User
@@ -134,6 +142,54 @@ class FacebookLogin(GenericAPIView):
             logger.debug("facebook token failed with isvalid:" + str(is_valid) + ",fb_app_id:" + str(
                 fb_app_id) + ",fb_user_id:" + str(fb_user_id) + ",expires_at:" + str(expires_at))
             return Response('input_token is invalid.', status=status.HTTP_400_BAD_REQUEST)
+
+
+# Access token generation
+class OAuthToken(OAuthLibMixin, CsrfExemptMixin, APIView):
+    server_class = Server
+    validator_class = oauth2_settings.OAUTH2_VALIDATOR_CLASS
+    oauthlib_backend_class = oauth2_settings.OAUTH2_BACKEND_CLASS
+    permission_classes = [AllowAny, ]
+
+    def post(self, request, *args, **kwargs):
+        grant_type = get_data_field_or_400(request, 'grant_type')
+        user_id = get_data_field_or_400(request, 'user_id')
+
+        print('HERE')
+        url, headers, body, status = self.create_token_response(request)
+        print('HERE AGAIN')
+        response_json = {}
+
+        token_json = json.loads(body)
+        response_json['token'] = token_json
+
+        try:
+            error = token_json['error']
+        except KeyError:
+            # if 'password' grant type, insert user info into response
+            if grant_type == 'password':
+                user = User.objects.get(pk=user_id)
+                user_json = UserSerializer(user)
+                response_json['user'] = user_json.data
+
+                # erase all existing access tokens that belong to the user
+                tokens = AccessToken.objects.filter(user=user).exclude(token=token_json['access_token'])
+                tokens.delete()
+            elif grant_type == 'refresh_token':
+                token_string = token_json['refresh_token']
+                refresh_token = RefreshToken.objects.get(token=token_string)
+                user = refresh_token.user
+
+                # erase all existing access tokens that belong to the user
+                tokens = AccessToken.objects.filter(user=user).exclude(token=token_json['access_token'])
+                tokens.delete()
+            elif grant_type == 'client_credentials':
+                # delete expired client access tokens
+                tokens = AccessToken.objects.filter(user=None, expires__lte=timezone.now())
+                tokens.delete()
+
+        body = response_json
+        return Response(data=body, status=status)
 
 
 # Returns a body that lists authentication details
