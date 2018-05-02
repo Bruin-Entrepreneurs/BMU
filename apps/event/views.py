@@ -91,7 +91,7 @@ class EventAcceptView(RetrieveUpdateDestroyAPIView):
         user = request.user
         event_instance = self.get_queryset().get(pk=self.kwargs['event_id'])
 
-        event_instance.accept.add(user)
+        event_instance.accepted.add(user)
         event_instance.save()
         serializer = self.get_serializer(event_instance)
 

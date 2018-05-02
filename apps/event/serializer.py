@@ -33,16 +33,6 @@ class EventSerializer(serializers.ModelSerializer):
     accepted = UserSummarySerializer(many=True)
     declined = UserSummarySerializer(many=True)
 
-    # super_invited = serializers.SerializerMethodField()
-    #
-    # def get_super_invited(self, obj):
-    #     data = []
-    #
-    #     for user in obj.super_invited.all():
-    #         data.append(UserSummarySerializer(user).data)
-    #
-    #     return data
-
 
 class EventSummarySerializer(serializers.ModelSerializer):
     class Meta:
