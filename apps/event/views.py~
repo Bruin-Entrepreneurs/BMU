@@ -72,7 +72,7 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         return Response(data=EventSerializer(event).data, status=status.HTTP_201_CREATED)
 
 
-class EventDetailView(ListModelMixin, RetrieveUpdateDestroyAPIView):
+class EventDetailView(ListModelMixin, GenericAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
