@@ -72,7 +72,7 @@ class EventListCreateView(ListModelMixin, GenericAPIView):
         return Response(data=EventSerializer(event).data, status=status.HTTP_201_CREATED)
 
 
-class EventDetailView(RetrieveUpdateDestroyAPIView):
+class EventDetailView(ListModelMixin, RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
@@ -81,6 +81,19 @@ class EventDetailView(RetrieveUpdateDestroyAPIView):
         serializer = self.get_serializer(event_instance)
 
         return Response(serializer.data)
+
+    def list(self, request, *args, **kwargs):
+        current_user = request.user
+        personal_events = []
+        for event in self.get_queryset():
+            accepted_users = event.accepted
+            for user in accepted_users:
+                if user.username = current_user.username:
+                    personal_events.append(event)
+                    break 
+        serializer = self.get_serializer(personal_events, many=True)
+        return Response(data=serializer.data)
+
 
 
 class EventAcceptView(RetrieveUpdateDestroyAPIView):
